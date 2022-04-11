@@ -3,7 +3,7 @@
 <br />
 <div align="center">
   <a href="https://img.freepik.com/free-vector/two-thermometers-hot-cold-weather_1308-36010.jpg?t=st=1649314846~exp=1649315446~hmac=f41c26947b7a3fc87f83ff2687c4373bfefc9347d100711b4c8ab7128573bdbc&w=740">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://img.freepik.com/free-vector/two-thermometers-hot-cold-weather_1308-36010.jpg?t=st=1649314846~exp=1649315446~hmac=f41c26947b7a3fc87f83ff2687c4373bfefc9347d100711b4c8ab7128573bdbc&w=740" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Climator</h3>
