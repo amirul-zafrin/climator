@@ -1,6 +1,5 @@
-package org.az.climator.services;
+package org.az.climator.resource;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.smallrye.mutiny.Uni;
 import org.az.climator.entity.UserEntity;
 import org.az.climator.template.ActivationMailTemplate;
@@ -11,10 +10,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import java.net.URI;
 
-@Path("")
-public class MailService {
+@Path("mail")
+public class MailResource {
     @GET
-    @Path("mail/{id}")
+    @Path("activation/{id}")
     @APIResponse(
             responseCode = "200",
             description = "Sent"
