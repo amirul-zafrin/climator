@@ -29,13 +29,12 @@ public class RegistrationResource {
 
     // TODO: Tidy up > move to service
     public Response create(@RequestBody RegistrationDTO info) {
-        boolean emailExist = UserEntity.existEmail(info.getEmail());
-        boolean usernameExist = UserEntity.existUsername(info.getUsername());
-        if((usernameExist || emailExist) || !EmailValidation.validate(info.getEmail())) {
+
+        if(EmailValidation.validate(info.getEmail(), info.getUsername())) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Email already registered or not valid!")
                     .type(MediaType.TEXT_PLAIN_TYPE).build();
         }
-
+        
         UserEntity user = UserEntity.addUser(info.getEmail(), info.getUsername(), info.getPassword());
 
         if(user.isPersistent()) {
