@@ -14,12 +14,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-//TODO: Next time maybe just use keycloak
+//TODO: Maybe just use keycloak
 
 @Path("login")
 public class LoginResource {
-
-//    TODO: Login logic & return JWT to user
 
     @Inject
     JWTService jwtService;
@@ -32,24 +30,21 @@ public class LoginResource {
         description = "Login Success"
     )
 
-//    TODO: Tidy up > move to services
     public Response loginConfirmation(LoginDTO info){
 
-        UserEntity user = UserEntity.existUsername(info.getUsername()) ? UserEntity.searchByUsername(info.getUsername()) : null;
-
-        if(user == null) {
+        if(UserEntity.existUsername(info.getUsername())) {
             return Response.status(Response.Status.BAD_REQUEST).entity(info.getUsername() + " is not exist!")
                     .type(MediaType.TEXT_PLAIN_TYPE).build();
         }
 
+        UserEntity user = UserEntity.searchByUsername(info.getUsername());
         boolean checkPassword = BcryptUtil.matches(info.getPassword(),user.encodedPassword);
-        boolean activated = user.activated;
 
-        if(!activated) {
+        if(!user.activated) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Please activate your account first!")
                     .type(MediaType.TEXT_PLAIN_TYPE).build();
 
-        }else if(checkPassword && activated) {
+        }else if(checkPassword) {
             return Response.ok(jwtService.generateJWT(user)).type(MediaType.TEXT_PLAIN_TYPE).build();
         }
         else {
