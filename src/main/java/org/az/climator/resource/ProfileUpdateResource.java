@@ -3,19 +3,25 @@ package org.az.climator.resource;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import org.az.climator.entity.UserEntity;
 import org.az.climator.validation.PasswordValidation.ValidPassword;
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
 
 import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 @Path("/manage")
 public class ProfileUpdateResource {
 
 //    TODO: Add security features: JWT
+
     @PUT
     @Transactional
+    @RolesAllowed("user")
     @Path("/update-pass/{id}")
     @APIResponse(
         responseCode = "200",
@@ -32,6 +38,7 @@ public class ProfileUpdateResource {
 
     @DELETE
     @Transactional
+    @RolesAllowed("user")
     @Path("/delete/{id}")
     @APIResponse(
             responseCode = "204",
@@ -42,4 +49,12 @@ public class ProfileUpdateResource {
         return deleted ? Response.noContent().build() :
                 Response.status(Response.Status.BAD_REQUEST).build();
     }
+
+    @GET
+    @RolesAllowed("user")
+    @Path("/me")
+    public String me(@Context SecurityContext securityContext) {
+        return securityContext.getUserPrincipal().getName();
+    }
+
 }

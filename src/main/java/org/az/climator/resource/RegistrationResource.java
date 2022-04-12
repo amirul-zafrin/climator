@@ -1,5 +1,6 @@
 package org.az.climator.resource;
 
+import io.quarkus.security.jpa.Username;
 import org.az.climator.entity.ActivationEntity;
 import org.az.climator.entity.UserEntity;
 import org.az.climator.dto.RegistrationDTO;
@@ -12,7 +13,6 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
 
 @Path("register")
 public class RegistrationResource {
@@ -26,18 +26,22 @@ public class RegistrationResource {
             description = "Create User",
             content = @Content(mediaType = MediaType.APPLICATION_JSON)
     )
-    public Response create(@RequestBody RegistrationDTO info) {
 
-        if(!EmailValidation.validate(info.getEmail())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Email already registered!").build();
+    // TODO: Tidy up > move to service
+    public Response create(@RequestBody RegistrationDTO info) {
+        boolean emailExist = UserEntity.existEmail(info.getEmail());
+        boolean usernameExist = UserEntity.existUsername(info.getUsername());
+        if((usernameExist || emailExist) || !EmailValidation.validate(info.getEmail())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Email already registered or not valid!")
+                    .type(MediaType.TEXT_PLAIN_TYPE).build();
         }
 
         UserEntity user = UserEntity.addUser(info.getEmail(), info.getUsername(), info.getPassword());
-        ActivationEntity.setActivation(user);
 
-        return user.isPersistent() ? Response.created(URI.create("register/create/"+user.id)).build()
-                : Response.status(Response.Status.BAD_REQUEST).build();
-
+        if(user.isPersistent()) {
+            return Response.status(Response.Status.CREATED).build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @PUT
@@ -45,7 +49,7 @@ public class RegistrationResource {
     @Path("/activation/{id}")
     public Response activated(@PathParam("id") Long id, @QueryParam("token") String token){
         UserEntity user = UserEntity.findById(id);
-        boolean activation = user.activationCode.token == token;
+        boolean activation = user.activationCode.token.equals(token);
         boolean expired = ActivationEntity.checkExpiration(user);
 
         if(activation && expired) {
@@ -53,7 +57,8 @@ public class RegistrationResource {
             return Response.accepted().build();
         }
         else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Token is invalid or expired! Please request new token").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Token is invalid or expired! Please request new token")
+                    .type(MediaType.TEXT_PLAIN_TYPE).build();
         }
     }
 
@@ -64,7 +69,8 @@ public class RegistrationResource {
         UserEntity user = UserEntity.findById(id);
         String token = user.activationCode.token;
         String newToken = ActivationEntity.resetActivation(user);
-        return token != newToken? Response.ok().entity("New Token Generated").build() :
-                Response.status(Response.Status.BAD_REQUEST).build();
+        if(token != newToken) {
+            return Response.ok("New Token Generated!").build();
+        } return Response.status(Response.Status.BAD_REQUEST).build();
     }
 }

@@ -8,10 +8,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "activation")
 public class ActivationEntity extends PanacheEntity {
 
-//    TODO: Fix user -> activation relation
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "id")
@@ -21,7 +19,7 @@ public class ActivationEntity extends PanacheEntity {
     public LocalDateTime createdAt;
     public LocalDateTime expiredAt;
 
-    public static void setActivation(UserEntity userEntity) {
+    public static ActivationEntity setActivation(UserEntity userEntity) {
         ActivationEntity activationEntity = new ActivationEntity();
 
         activationEntity.userEntity = userEntity;
@@ -30,7 +28,7 @@ public class ActivationEntity extends PanacheEntity {
         activationEntity.expiredAt = LocalDateTime.now().plusMinutes(15);
 
         activationEntity.persist();
-
+        return activationEntity;
     }
 
     public static String resetActivation(UserEntity userEntity) {

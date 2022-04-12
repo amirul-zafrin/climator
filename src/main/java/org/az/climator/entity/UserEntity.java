@@ -2,6 +2,7 @@ package org.az.climator.entity;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
@@ -11,10 +12,12 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
+//TODO: Consider change from Active record pattern to Repository pattern
+
 @Entity
-@Table(name = "user")
 @UserDefinition
 public class UserEntity extends PanacheEntity {
 
@@ -36,11 +39,10 @@ public class UserEntity extends PanacheEntity {
 
     public LocalDateTime createdAt;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     public ActivationEntity activationCode;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_id")
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<DataEntity> data;
 
     public static UserEntity addUser(String email, String username, String password){
@@ -48,8 +50,9 @@ public class UserEntity extends PanacheEntity {
         user.email = email;
         user.username = username;
         user.encodedPassword = BcryptUtil.bcryptHash(password);
+        user.activationCode = ActivationEntity.setActivation(user);
 
-        user.role = "USER";
+        user.role = "user";
         user.activated = false;
         user.createdAt = LocalDateTime.now();
 
@@ -57,11 +60,19 @@ public class UserEntity extends PanacheEntity {
         return user;
     }
 
+    //TODO: case-insensitive query
+    public static boolean existUsername(String username) {
+        Optional<PanacheEntityBase> user = find("username", username).firstResultOptional();
+        return user.isPresent();
+    }
+
+    public static boolean existEmail(String email){
+        Optional<PanacheEntityBase> userEmail = find("email", email).firstResultOptional();
+        return userEmail.isPresent();
+    }
+
     public static UserEntity searchByUsername(String username){
         return find("username",username).firstResult();
     }
 
-    public static boolean existedUsername(String username) {
-        return true;
-    }
 }
