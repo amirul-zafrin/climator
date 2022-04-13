@@ -39,7 +39,8 @@ public class UserEntity extends PanacheEntity {
 
     public LocalDateTime createdAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
+//    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade=CascadeType.ALL, mappedBy = "userEntity")
     public ActivationEntity activationCode;
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)

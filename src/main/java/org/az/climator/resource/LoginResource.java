@@ -11,7 +11,9 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 //TODO: Maybe just use keycloak
@@ -25,32 +27,29 @@ public class LoginResource {
     @POST
     @PermitAll
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     @APIResponse(
         responseCode = "200",
         description = "Login Success"
     )
+    public Response loginConfirmation(LoginDTO info) {
 
-    public Response loginConfirmation(LoginDTO info){
-
-        if(UserEntity.existUsername(info.getUsername())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(info.getUsername() + " is not exist!")
-                    .type(MediaType.TEXT_PLAIN_TYPE).build();
+        if (!UserEntity.existUsername(info.getUsername())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(info.getUsername() + " is not exist!").build();
         }
 
         UserEntity user = UserEntity.searchByUsername(info.getUsername());
-        boolean checkPassword = BcryptUtil.matches(info.getPassword(),user.encodedPassword);
+        boolean checkPassword = BcryptUtil.matches(info.getPassword(), user.encodedPassword);
 
-        if(!user.activated) {
+        if (!user.activated) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Please activate your account first!")
                     .type(MediaType.TEXT_PLAIN_TYPE).build();
 
-        }else if(checkPassword) {
-            return Response.ok(jwtService.generateJWT(user)).type(MediaType.TEXT_PLAIN_TYPE).build();
-        }
-        else {
+        } else if (!checkPassword) {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Wrong password")
                     .type(MediaType.TEXT_PLAIN_TYPE).build();
         }
+            return Response.ok(jwtService.generateJWT(user)).type(MediaType.TEXT_PLAIN_TYPE).build();
+//        return Response.ok(user.username).cookie(new NewCookie("jwt", jwtService.generateJWT(user))).build();
     }
-
 }

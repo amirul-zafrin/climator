@@ -15,7 +15,7 @@ public class MailResource {
     @GET
     @Path("activation/{id}")
     @APIResponse(
-            responseCode = "200",
+            responseCode = "204",
             description = "Sent"
     )
     public static Uni<Void> sendActivationLink(@PathParam("id") Long id) {
