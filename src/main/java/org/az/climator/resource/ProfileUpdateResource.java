@@ -1,6 +1,7 @@
 package org.az.climator.resource;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
+import io.smallrye.jwt.auth.principal.ParseException;
 import org.az.climator.entity.UserEntity;
 import org.az.climator.services.JWTService;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -23,6 +24,9 @@ public class ProfileUpdateResource {
     @Context
     SecurityContext securityContext;
 
+    @CookieParam("jwt")
+    String jwt;
+
     @PUT
     @Transactional
     @RolesAllowed("user")
@@ -31,11 +35,11 @@ public class ProfileUpdateResource {
         responseCode = "200",
         description = "Update User's Password"
     )
-    public Response updatePasswordById(@PathParam("id") Long id, @QueryParam("newPass") String newPass) {
+    public Response updatePasswordById(@PathParam("id") Long id, @QueryParam("newPass") String newPass) throws ParseException {
 
         UserEntity user = UserEntity.findById(id);
         user.encodedPassword = BcryptUtil.bcryptHash(newPass);
-        return jwtService.verifyJWT(id,securityContext) ? Response.ok().build() :
+        return jwtService.verifyJWTCookies(id, jwt) ? Response.ok().build() :
                 Response.status(Response.Status.BAD_REQUEST).build();
     }
 

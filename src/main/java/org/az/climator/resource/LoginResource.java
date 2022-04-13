@@ -4,6 +4,7 @@ import io.quarkus.elytron.security.common.BcryptUtil;
 import org.az.climator.entity.UserEntity;
 import org.az.climator.dto.LoginDTO;
 import org.az.climator.services.JWTService;
+import org.az.climator.services.LoginService;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import javax.annotation.security.PermitAll;
@@ -33,23 +34,11 @@ public class LoginResource {
         description = "Login Success"
     )
     public Response loginConfirmation(LoginDTO info) {
+        if (LoginService.verify(info) == null) {
+            return Response.ok(info.getUsername()).cookie(new NewCookie("jwt", jwtService.generateJWT(info.getUsername()))).build();
+//            return Response.ok(jwtService.generateJWT(user)).type(MediaType.TEXT_PLAIN_TYPE).build();
 
-        if (!UserEntity.existUsername(info.getUsername())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(info.getUsername() + " is not exist!").build();
         }
-
-        UserEntity user = UserEntity.searchByUsername(info.getUsername());
-        boolean checkPassword = BcryptUtil.matches(info.getPassword(), user.encodedPassword);
-
-        if (!user.activated) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Please activate your account first!")
-                    .type(MediaType.TEXT_PLAIN_TYPE).build();
-
-        } else if (!checkPassword) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Wrong password")
-                    .type(MediaType.TEXT_PLAIN_TYPE).build();
-        }
-            return Response.ok(jwtService.generateJWT(user)).type(MediaType.TEXT_PLAIN_TYPE).build();
-//        return Response.ok(user.username).cookie(new NewCookie("jwt", jwtService.generateJWT(user))).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(LoginService.verify(info)).build();
     }
 }

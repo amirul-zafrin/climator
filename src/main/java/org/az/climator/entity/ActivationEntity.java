@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name = "activation")
 public class ActivationEntity extends PanacheEntity {
 
     @OneToOne(fetch = FetchType.LAZY)

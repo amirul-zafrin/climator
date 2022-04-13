@@ -14,6 +14,7 @@ import java.util.Map;
 //    TODO: Store uploaded data
 
 @Entity
+@Table(name = "data")
 @TypeDefs({@TypeDef(name = "json", typeClass = JsonStringType.class)})
 public class DataEntity extends PanacheEntity {
 
