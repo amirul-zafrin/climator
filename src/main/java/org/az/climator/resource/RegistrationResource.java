@@ -17,7 +17,6 @@ public class RegistrationResource {
     @Path("/create")
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @APIResponse(
             responseCode = "201",
             description = "Create User"
@@ -34,10 +33,6 @@ public class RegistrationResource {
     @APIResponse(
             responseCode = "202",
             description = "Activation Succeed"
-    )
-    @APIResponse(
-            responseCode = "404",
-            description = "Activation token is invalid or expired"
     )
     public Response activated(@PathParam("id") Long id, @QueryParam("token") String token){
         return RegistrationService.userActivation(id, token) ? Response.accepted().build() :

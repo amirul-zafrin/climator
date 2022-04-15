@@ -11,4 +11,6 @@ public class RegistrationDTO {
     @ValidPassword
     private String password;
 
+    private String confirmedPassword;
+
 }

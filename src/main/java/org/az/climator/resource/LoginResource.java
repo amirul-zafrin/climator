@@ -35,9 +35,7 @@ public class LoginResource {
     )
     public Response loginConfirmation(LoginDTO info) {
         if (LoginService.verify(info) == null) {
-            return Response.ok(info.getUsername()).cookie(new NewCookie("jwt", jwtService.generateJWT(info.getUsername()))).build();
-//            return Response.ok(jwtService.generateJWT(user)).type(MediaType.TEXT_PLAIN_TYPE).build();
-
+            return Response.ok("Bearer " + jwtService.generateJWT(info.getUsername())).build();
         }
         return Response.status(Response.Status.BAD_REQUEST).entity(LoginService.verify(info)).build();
     }

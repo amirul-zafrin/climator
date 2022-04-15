@@ -9,7 +9,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.ws.rs.CookieParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
@@ -17,10 +16,6 @@ import javax.ws.rs.core.SecurityContext;
 
 @Singleton
 public class JWTService {
-    @Inject
-    JWTParser jwtParser;
-
-    @ConfigProperty(name = "org.az.climator.secret") String secret;
 
     public String generateJWT(String username) {
         UserEntity user = UserEntity.searchByUsername(username);
@@ -30,18 +25,12 @@ public class JWTService {
                 .groups(user.role)
                 .expiresAt(System.currentTimeMillis() + 3600)
                 .issuedAt(System.currentTimeMillis())
-                .signWithSecret(secret);
+                .sign();
     }
 
     public boolean verifyJWT(Long id, @Context SecurityContext securityContext) {
-         UserEntity user = UserEntity.findById(id);
-         return user.username.equals(securityContext.getUserPrincipal().getName());
-    }
-
-    public boolean verifyJWTCookies(Long id, @CookieParam("jwt") String jwtCookie) throws ParseException {
         UserEntity user = UserEntity.findById(id);
-        JsonWebToken jwt = jwtParser.verify(jwtCookie, secret);
-        return jwt.getName().equals(user.username);
+        return user.username.equals(securityContext.getUserPrincipal().getName());
     }
 
 }
