@@ -5,30 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b0ead6ac-bf41-4493-aa9f-83946495b013" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/docker/Dockerfile.jvm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/docker/Dockerfile.legacy-jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/docker/Dockerfile.native" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/docker/Dockerfile.native-micro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/app/App.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/dto/LoginDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/dto/RegistrationDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/entity/ActivationEntity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/entity/DataEntity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/entity/UserEntity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/resource/LoginResource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/resource/MailResource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/resource/RegistrationResource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/resource/UserResource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/services/JWTService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/services/LoginService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/services/RegistrationService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/template/ActivationMailTemplate.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/validation/EmailValidation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/validation/PasswordValidation/PasswordConstraintValidator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/az/climator/validation/PasswordValidation/ValidPassword.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/CLIMATOR.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/activation.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/UploadData.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/components/UploadData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/styles/Button.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/components/styles/Button.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/styles/Landing.styled.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/components/styles/Landing.styled.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/styles/Login.styled.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/components/styles/Login.styled.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/styles/TopBar.styled.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/components/styles/TopBar.styled.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +76,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/temp-api" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />

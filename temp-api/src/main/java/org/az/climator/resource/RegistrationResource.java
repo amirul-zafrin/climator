@@ -11,12 +11,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("register")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class RegistrationResource {
 
     @POST
     @Path("/create")
     @Transactional
-    @Consumes(MediaType.APPLICATION_JSON)
     @APIResponse(
             responseCode = "201",
             description = "Create User"
@@ -29,7 +30,6 @@ public class RegistrationResource {
     @PUT
     @Transactional
     @Path("/activation/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     @APIResponse(
             responseCode = "202",
             description = "Activation Succeed"

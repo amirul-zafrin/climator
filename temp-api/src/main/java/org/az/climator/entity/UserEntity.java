@@ -7,6 +7,7 @@ import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
+import org.az.climator.dto.RegistrationDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -43,14 +44,14 @@ public class UserEntity extends PanacheEntity {
     @OneToOne(cascade=CascadeType.ALL, mappedBy = "userEntity")
     public ActivationEntity activationCode;
 
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany( mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<DataEntity> data;
 
-    public static UserEntity addUser(String email, String username, String password){
+    public static UserEntity addUser(RegistrationDTO info){
         UserEntity user = new UserEntity();
-        user.email = email;
-        user.username = username;
-        user.encodedPassword = BcryptUtil.bcryptHash(password);
+        user.email = info.getEmail();
+        user.username = info.getUsername();
+        user.encodedPassword = BcryptUtil.bcryptHash(info.getPassword());
         user.activationCode = ActivationEntity.setActivation(user);
 
         user.role = "user";

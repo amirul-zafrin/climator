@@ -17,6 +17,7 @@ import javax.ws.rs.core.SecurityContext;
 @Path("/manage")
 public class UserResource {
 
+//    TODO: Optimize this class: avoid jwtservice injection
     @Inject
     JWTService jwtService;
 

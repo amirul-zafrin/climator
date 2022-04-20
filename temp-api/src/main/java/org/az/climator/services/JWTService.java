@@ -19,13 +19,16 @@ public class JWTService {
 
     public String generateJWT(String username) {
         UserEntity user = UserEntity.searchByUsername(username);
-        return Jwt.issuer("climator")
+
+        String sign = Jwt.issuer("climator")
                 .subject(user.username)
-                .claim("id",user.id)
+                .claim("id", user.id)
                 .groups(user.role)
                 .expiresAt(System.currentTimeMillis() + 3600)
                 .issuedAt(System.currentTimeMillis())
                 .sign();
+
+        return "Bearer " + sign;
     }
 
     public boolean verifyJWT(Long id, @Context SecurityContext securityContext) {

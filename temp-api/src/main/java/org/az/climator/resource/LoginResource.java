@@ -1,6 +1,7 @@
 package org.az.climator.resource;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
+import org.az.climator.dto.LoginResponseDTO;
 import org.az.climator.entity.UserEntity;
 import org.az.climator.dto.LoginDTO;
 import org.az.climator.services.JWTService;
@@ -20,6 +21,8 @@ import javax.ws.rs.core.Response;
 //TODO: Maybe just use keycloak
 
 @Path("login")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class LoginResource {
 
     @Inject
@@ -27,15 +30,17 @@ public class LoginResource {
 
     @POST
     @PermitAll
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
     @APIResponse(
         responseCode = "200",
         description = "Login Success"
     )
     public Response loginConfirmation(LoginDTO info) {
         if (LoginService.verify(info) == null) {
-            return Response.ok("Bearer " + jwtService.generateJWT(info.getUsername())).build();
+            LoginResponseDTO res = new LoginResponseDTO();
+            res.setJwt( jwtService.generateJWT(info.getUsername()));
+            res.setUsername(info.getUsername());
+
+            return Response.ok(res).build();
         }
         return Response.status(Response.Status.BAD_REQUEST).entity(LoginService.verify(info)).build();
     }

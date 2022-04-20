@@ -20,7 +20,7 @@ public class RegistrationService {
             message = "Username already used!";
             return false;
         } else {
-            UserEntity user = UserEntity.addUser(info.getEmail(), info.getUsername(), info.getPassword());
+            UserEntity user = UserEntity.addUser(info);
             message = user.id.toString();
             return true;
         }
