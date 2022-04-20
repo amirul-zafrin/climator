@@ -16,7 +16,7 @@ export const LgButton = styled.button`
   text-transform: uppercase;
   letter-spacing: 2.5px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 1);
+  color: #000;
   background-color: rgba(255, 255, 255, 1);
   border: none;
   border-radius: 45px;

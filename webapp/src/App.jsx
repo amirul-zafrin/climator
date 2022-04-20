@@ -8,8 +8,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" exact element={<Landing />} />
-        {/* TODO: Include username or id in path  */}
-        <Route path="/dashboard" exact element={<Dashboard />} />
+        <Route path="/dashboard/:username" element={<Dashboard />} />
         <Route path="/activation" element={<Activation />} />
       </Routes>
     </BrowserRouter>

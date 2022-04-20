@@ -15,7 +15,7 @@ export const UploadButton = styled.button`
   text-transform: uppercase;
   letter-spacing: 2.5px;
   font-weight: 500;
-  color: #fff;
+  color: #000;
   background-color: #fff;
   border: none;
   border-radius: 45px;
@@ -34,4 +34,14 @@ export const UploadButton = styled.button`
   &:active {
     transform: translateY(-1px);
   }
+`;
+
+export const TextContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 5px;
 `;

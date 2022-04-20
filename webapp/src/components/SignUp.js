@@ -22,7 +22,6 @@ const SignUp = () => {
         value !== values.password ? "Passwords did not match" : null,
     },
   });
-  // TODO: Add router change to redirect to login page
 
   let navigate = useNavigate();
   const routeChange = () => {
@@ -36,10 +35,7 @@ const SignUp = () => {
 
   const [error, setError] = React.useState(null);
 
-  const alert = (e) => {
-    return <ErrorHandling text={e} />;
-  };
-
+  //TODO: async change page with activation link
   const handleSubmit = form.onSubmit((values) => {
     axios
       .post(`http://localhost:8081/register/create`, values)
@@ -48,6 +44,7 @@ const SignUp = () => {
           .get(`http://localhost:8081/mail/activation/` + response.data)
           .then(() => {
             handlers.open();
+            console.log(sent);
             setError(null);
           })
           .catch((error) => console.log(error.response.data));

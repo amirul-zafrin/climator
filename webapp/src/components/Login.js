@@ -1,10 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Container, TextInput, PasswordInput, Text } from "@mantine/core";
 import { ButtonContainer, LgButton } from "./styles/Login.styled";
 import { useForm } from "@mantine/form";
 import axios from "axios";
 
 const Login = () => {
+  let navigate = useNavigate();
+
   const form = useForm({
     initialValues: {
       username: "",
@@ -16,7 +19,9 @@ const Login = () => {
     axios
       .post(`http://localhost:8081/login`, values)
       .then(function (response) {
-        localStorage.setItem("Authorization", response.data);
+        localStorage.removeItem("Authorization");
+        localStorage.setItem("Authorization", response.data.jwt);
+        navigate("/dashboard/" + response.data.username);
       })
       .catch(function (error) {
         console.log(error.response.data);

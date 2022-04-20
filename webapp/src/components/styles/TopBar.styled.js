@@ -14,8 +14,8 @@ export const TopContainer = styled.div`
   align-items: center;
 
   &:hover {
-    background-color: #fff;
-    box-shadow: 0px 15px 20px rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0px 10px 20px rgba(255, 255, 255, 0.4);
     color: #fff;
   }
 `;

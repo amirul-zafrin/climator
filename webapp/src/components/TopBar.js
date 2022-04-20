@@ -19,7 +19,7 @@ const TopBar = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [user]);
 
   return <TopContainer>Welcome to Climator, {user}!</TopContainer>;
 };

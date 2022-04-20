@@ -4,23 +4,17 @@ import { FlexContainer } from "../components/styles/FlexContainer.styled";
 import { Modal } from "@mantine/core";
 import { Button } from "../components/styles/Button";
 import UploadData from "../components/UploadData";
+import DataGridComp from "../components/DataGridComp";
+import Graph from "../components/Graph";
 
 const Dashboard = () => {
   const [openedUpload, setOpenedUpload] = useState(false);
-  const [file, setFile] = useState();
-  const fileReader = new FileReader();
-
-  const handleOnSubmit = (e) => {
-    e.preventDefault();
-    if (file) {
-      fileReader.onload = function (event) {
-        const csvOutput = event.target.result;
-      };
-
-      fileReader.readAsText(file);
-    }
+  const [data, setData] = useState([]);
+  const addData = ({ list }) => {
+    setData(list);
   };
-
+  // TODO: Add graph with filtered data
+  //TODO: Filtering Data
   return (
     <FlexContainer>
       <TopBar />
@@ -31,8 +25,9 @@ const Dashboard = () => {
         onClose={() => setOpenedUpload(false)}
         opened={openedUpload}
       >
-        <UploadData />
+        <UploadData addData={addData} />
       </Modal>
+      <DataGridComp data={data} />
     </FlexContainer>
   );
 };
