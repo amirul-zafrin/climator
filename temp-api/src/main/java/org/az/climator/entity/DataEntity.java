@@ -1,9 +1,13 @@
 package org.az.climator.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.bson.types.ObjectId;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 //    TODO: Store uploaded data
 
@@ -18,9 +22,9 @@ public class DataEntity extends PanacheEntity {
 
     public String filename;
 
-    public ObjectId objectId;
+    public String objectId;
 
-    public static void addData(UserEntity userEntity, String filename, ObjectId objectId) {
+    public static void addData(UserEntity userEntity, String filename, String objectId) {
         DataEntity dataEntity = new DataEntity();
 
         dataEntity.userEntity = userEntity;
@@ -29,6 +33,14 @@ public class DataEntity extends PanacheEntity {
         dataEntity.objectId = objectId;
 
         dataEntity.persist();
+    }
+
+    public static DataEntity searchByFilename(String filename){
+        return find("filename",filename).firstResult();
+    }
+
+    public static List<DataEntity> searchByUserId(Long id){
+        return list("ue_id", id);
     }
 
 }
