@@ -20,7 +20,7 @@ public class MailResource {
     )
     public static Uni<Void> sendActivationLink(@PathParam("id") Long id) {
         UserEntity user = UserEntity.findById(id);
-        URI uri = URI.create("localhost:8081/register/activation/" + user.id + "?token=" + user.activationCode.token);
+        URI uri = URI.create("http://localhost:8081/register/activation/" + user.id + "?token=" + user.activationCode.token);
         return ActivationMailTemplate.activation(user.username,uri.toString())
                 .to(user.email)
                 .subject("Activation")
