@@ -40,24 +40,6 @@ const UploadData = () => {
     }
   };
 
-  // const uploadToDB = () => {
-  //   let formData = new FormData();
-  //   formData.append("file", acceptedFiles[0].path);
-  //   axios
-  //     .post(
-  //       "http://localhost:8081/experiment/upload/files?userid=1",
-  //       formData,
-  //       {
-  //         headers: {
-  //           Authorization: localStorage.getItem("Authorization"),
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       }
-  //     )
-  //     .then((res) => console.log(res.data))
-  //     .catch((err) => console.log(err));
-  // };
-
   const handleOnSubmit = (e) => {
     e.preventDefault();
     if (formData.getAll("file").length > 0) {

@@ -6,3 +6,7 @@ export const FlexContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+`;

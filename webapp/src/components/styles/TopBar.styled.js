@@ -9,7 +9,6 @@ export const TopContainer = styled.div`
   z-index: 1;
   color: #fff;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 
