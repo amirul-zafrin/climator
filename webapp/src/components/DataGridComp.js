@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useCallback } from "react";
+import React, { useMemo, useRef, useCallback, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
@@ -92,10 +92,16 @@ const DataGridComp = ({ data }) => {
   const clearFilters = useCallback(() => {
     gridRef.current.api.setFilterModel(null);
   }, []);
-
+  const onBtnExport = useCallback(() => {
+    const params = saveCSVParam();
+    gridRef.current.api.exportDataAsCsv(params);
+  }, []);
   return (
     <div className="ag-theme-alpine" style={gridStyle}>
       <Button onClick={clearFilters}>Reset Filter</Button>
+      <Button onClick={onBtnExport} disabled={data.length > 0 ? false : true}>
+        Export CSV
+      </Button>
       <AgGridReact
         ref={gridRef}
         rowData={rows(data)}

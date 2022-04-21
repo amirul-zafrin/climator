@@ -27,4 +27,10 @@ export const Button = styled.button`
   &:active {
     transform: translateY(-1px);
   }
+
+  &:disabled {
+    background-color: #d3d3d3;
+    transform: translateY(0);
+    box-shadow: none;
+  }
 `;
