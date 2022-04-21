@@ -6,6 +6,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSBuckets;
+import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 import org.az.climator.entity.DataEntity;
@@ -15,14 +16,18 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Singleton;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequestScoped
 public class DataService{
 
     public HashMap<ObjectId,String> dataToDB(@MultipartForm MultipartFormDataInput input) {
@@ -38,13 +43,8 @@ public class DataService{
         for (InputPart inputPart : inputParts) {
             try {
                 MultivaluedMap<String, String> header = inputPart.getHeaders();
-                fileName = getFileName(header);
+                fileName = getFilename(header);
                 System.out.println("Filename:" + fileName);
-
-//                Experiment
-                System.out.println("Header: "+inputPart.getHeaders());
-
-
                 InputStream inputStream = inputPart.getBody(InputStream.class, null);
                 objectId = DataService.saveCSVToDB(fileName, inputStream);
                 result.put(objectId, fileName);
@@ -56,35 +56,29 @@ public class DataService{
         return result;
     }
 
-    public void getCSVFromDB(ObjectId objectId) throws IOException {
+    public byte[] getCSVFromDB(ObjectId objectId) throws IOException {
         MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
         MongoDatabase mydb = mongoClient.getDatabase("DataEntity");
         GridFSBucket gridFSBucket = GridFSBuckets.create(mydb, "files");
-        File tempFile = null;
+
         Document id = new Document();
         id.put("_id", objectId);
         GridFSFile fsFile = gridFSBucket.find(id).first();
 
         if (fsFile != null) {
-
-            String tempDir = System.getProperty("java.io.tmpdir");
-
-            tempFile = new File(tempDir + "/" + fsFile.getFilename());
-
-            FileOutputStream streamToDownloadTo = new FileOutputStream(tempFile);
-
-            gridFSBucket.downloadToStream(objectId, streamToDownloadTo);
-            streamToDownloadTo.close();
-
+            GridFSDownloadStream gridFSDownloadStream = gridFSBucket.openDownloadStream(objectId);
+            byte[] bytes = gridFSDownloadStream.readAllBytes();
+            return bytes;
         }
+        return null;
     }
 
-    public static List<String> getUserFiles(Long id) {
+    public Map<ObjectId, String> getUserFiles(Long id) {
         List<DataEntity> dataEntities = DataEntity.searchByUserId(id);
-        return dataEntities.stream().map(f -> f.filename).collect(Collectors.toList());
+        return dataEntities.stream().collect(Collectors.toMap(d -> new ObjectId(d.objectId), d -> d.filename));
     }
 
-    private String getFileName(MultivaluedMap<String, String> header) {
+    private String getFilename(MultivaluedMap<String, String> header) {
         String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
         for (String filename : contentDisposition) {
             if ((filename.trim().startsWith("filename"))) {
@@ -95,7 +89,6 @@ public class DataService{
         }
         return "unknown";
     }
-
 
     private static ObjectId saveCSVToDB(String filename, InputStream inputStream) {
         MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");

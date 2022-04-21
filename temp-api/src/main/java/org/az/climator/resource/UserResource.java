@@ -33,6 +33,15 @@ public class UserResource {
         return Response.ok(username).build();
     }
 
+    @GET
+    @RolesAllowed("user")
+    @Path("/userid")
+    public Response getUserID() {
+        String username = securityContext.getUserPrincipal().getName();
+        UserEntity userEntity = UserEntity.searchByUsername(username);
+        return Response.ok(userEntity.id).build();
+    }
+
     @PUT
     @Transactional
     @RolesAllowed("user")
