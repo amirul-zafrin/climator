@@ -27,7 +27,7 @@ public class RegistrationResource {
                 Response.status(Response.Status.BAD_REQUEST).entity(RegistrationService.getMessage()).build();
     }
 
-    @PUT
+    @GET
     @Transactional
     @Path("/activation/{id}")
     @APIResponse(

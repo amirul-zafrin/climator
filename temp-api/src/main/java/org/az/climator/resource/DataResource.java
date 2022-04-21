@@ -11,6 +11,8 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
+import java.util.List;
 
 @Path("/data")
 public class DataResource {
@@ -22,9 +24,13 @@ public class DataResource {
     public Response handleFileUploadForm(@QueryParam("userid") Long id, @MultipartForm MultipartFormDataInput input){
         try {
             DataService dataService = new DataService();
-            ObjectId objectId = dataService.dataToDB(input);
+            HashMap<ObjectId, String> dbRes = dataService.dataToDB(input);
             UserEntity user = UserEntity.findById(id);
-            DataEntity.addData(user, "filename",objectId);
+
+            for (ObjectId objectId: dbRes.keySet()) {
+                DataEntity.addData(user, dbRes.get(objectId), String.valueOf(objectId));
+            }
+
             return Response.ok().build();
         }catch (Exception e) {
             e.printStackTrace();
@@ -32,18 +38,13 @@ public class DataResource {
         }
 
     }
-
     @GET
-    @Path("read")
+    @Path("/getfiles")
     @Transactional
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response readFile(){
+    public Response getUserFile(@QueryParam("userid") Long id){
         try {
-            ObjectId id = new ObjectId("625fb5a2716fc6557c6c31db");
-            DataService dataService = new DataService();
-            dataService.getCSVFromDB(id);
-
-            return Response.ok().build();
+            List<String> files = DataService.getUserFiles(id);
+            return Response.ok(files).build();
         }catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).build();
