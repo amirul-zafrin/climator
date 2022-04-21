@@ -1,75 +1,71 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React from "react";
 import { useDropzone } from "react-dropzone";
 import { TextContainer, UploadButton } from "./styles/Upload.styled";
 
 // TODO: Improve loading time
 
-const UploadData = ({ addData }) => {
+const UploadData = () => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    accept: ".csv",
+    key: "file",
   });
-  const [array, setArray] = useState([]);
-
-  const csvFileToArray = (string) => {
-    const csvHeader = ["id", "unknown", "epoch", "temperature"];
-    const csvRows = string.slice(string.indexOf("\n") + 1).split("\n");
-    const array = csvRows.map((i) => {
-      var result = i.split(",");
-      result.splice(3, 3);
-      const obj = csvHeader.reduce((object, header, index) => {
-        object[header] = result[index];
-        return object;
-      }, {});
-      return obj;
-    });
-    setArray(array);
-  };
-
-  const uploadToDB = ({ file }) => {
-    axios
-      .post(
-        //TODO: change id to user id
-        "http://localhost:8081/data/upload?id=1",
-        { file },
-        {
-          headers: {
-            Authorization: localStorage.getItem("Authorization"),
-            "Content-Type": "text/csv",
-          },
-        }
-      )
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
-  };
-
-  const handleOnSubmit = (e) => {
-    e.preventDefault();
-    if (acceptedFiles[0]) {
-      const fileReader = new FileReader();
-      fileReader.onload = function (event) {
-        const csvOutput = event.target.result;
-        csvFileToArray(csvOutput);
-        // console.log(array);
-        // addData({ list: array });
-        if (array.length !== 0) {
-          console.log(acceptedFiles[0]);
-          uploadToDB(acceptedFiles[0]);
-          console.log("uploaded");
-        }
-      };
-      fileReader.readAsText(acceptedFiles[0]);
-    }
-  };
 
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>
       <ul>{file.path} </ul>
-      <ul>
-        <UploadButton onClick={(e) => handleOnSubmit(e)}>Upload</UploadButton>
-      </ul>
     </li>
   ));
+
+  const formData = new FormData();
+
+  const fileObjects = acceptedFiles.map((file) => {
+    formData.append("file", file, file.name);
+  });
+
+  const upDB = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8081/experiment/upload?userid=1",
+        {
+          data: formData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+            ...formData.getHeaders,
+          },
+        }
+      );
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // const uploadToDB = () => {
+  //   let formData = new FormData();
+  //   formData.append("file", acceptedFiles[0].path);
+  //   axios
+  //     .post(
+  //       "http://localhost:8081/experiment/upload/files?userid=1",
+  //       formData,
+  //       {
+  //         headers: {
+  //           Authorization: localStorage.getItem("Authorization"),
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       }
+  //     )
+  //     .then((res) => console.log(res.data))
+  //     .catch((err) => console.log(err));
+  // };
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    if (formData.getAll("file").length > 0) {
+      console.log(formData.getAll("file"));
+      console.log(acceptedFiles);
+      upDB(formData);
+    }
+  };
 
   return (
     <section className="container">
@@ -82,6 +78,12 @@ const UploadData = ({ addData }) => {
       </div>
       <aside>
         <ul>{files}</ul>
+        <UploadButton
+          onClick={(e) => handleOnSubmit(e)}
+          disabled={!acceptedFiles}
+        >
+          Upload
+        </UploadButton>
       </aside>
     </section>
   );

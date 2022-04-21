@@ -25,7 +25,7 @@ const Dashboard = () => {
         onClose={() => setOpenedUpload(false)}
         opened={openedUpload}
       >
-        <UploadData addData={addData} />
+        <UploadData />
       </Modal>
       <DataGridComp data={data} />
     </FlexContainer>
