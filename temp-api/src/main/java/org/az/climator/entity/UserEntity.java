@@ -27,10 +27,12 @@ public class UserEntity extends PanacheEntity {
 
     @Email
     @NotBlank
+    @Column(unique = true)
     public String email;
 
     @Username
     @NotBlank
+    @Column(unique = true)
     public String username;
 
     @Password

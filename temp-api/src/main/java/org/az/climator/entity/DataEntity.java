@@ -22,6 +22,7 @@ public class DataEntity extends PanacheEntity {
 
     public String filename;
 
+    @Column(unique = true)
     public String objectId;
 
     public static void addData(UserEntity userEntity, String filename, String objectId) {
@@ -34,13 +35,16 @@ public class DataEntity extends PanacheEntity {
 
         dataEntity.persist();
     }
-
-    public static DataEntity searchByFilename(String filename){
-        return find("filename",filename).firstResult();
+// TODO: Don't let user save file with same name
+    public static boolean searchByFilename(String filename){
+        return find("filename",filename).firstResultOptional().isPresent();
     }
 
     public static List<DataEntity> searchByUserId(Long id){
         return list("ue_id", id);
     }
 
+    public static DataEntity searchByObjectId(ObjectId objectId) {
+        return find("objectid",objectId).firstResult();
+    }
 }

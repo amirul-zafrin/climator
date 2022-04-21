@@ -65,5 +65,4 @@ public class DataResource {
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
-
 }

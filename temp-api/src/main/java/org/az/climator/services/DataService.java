@@ -17,13 +17,9 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Singleton;
 import javax.ws.rs.core.MultivaluedMap;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,6 +67,18 @@ public class DataService{
             return bytes;
         }
         return null;
+    }
+    
+    public void deleteFile(ObjectId objectId) {
+        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
+        MongoDatabase mydb = mongoClient.getDatabase("DataEntity");
+        GridFSBucket gridFSBucket = GridFSBuckets.create(mydb, "files");
+
+        try {
+            gridFSBucket.delete(objectId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public Map<ObjectId, String> getUserFiles(Long id) {

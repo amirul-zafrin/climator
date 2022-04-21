@@ -8,6 +8,7 @@ import org.hibernate.service.spi.InjectService;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -16,7 +17,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+//TODO: Improve security
 @Path("/data")
 public class DataResource {
 
@@ -26,6 +27,7 @@ public class DataResource {
     @POST
     @Path("/upload")
     @Transactional
+    @RolesAllowed("user")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response handleFileUploadForm(@QueryParam("userid") Long id, @MultipartForm MultipartFormDataInput input){
         try {
@@ -44,6 +46,7 @@ public class DataResource {
 
     }
     @GET
+    @RolesAllowed("user")
     @Path("files/get")
     public Response getUserFile(@QueryParam("userid") Long id){
         try {
@@ -56,9 +59,9 @@ public class DataResource {
     }
 
     @GET
+    @RolesAllowed("user")
     @Path("files/read")
     public Response readFile(@QueryParam("fileid") String id) throws IOException {
-        System.out.println(id);
         ObjectId objectId = new ObjectId(id);
         byte[] csvFromDB = dataService.getCSVFromDB(objectId);
         if(csvFromDB != null) {
@@ -67,5 +70,13 @@ public class DataResource {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    @DELETE
+    @RolesAllowed("user")
+    @Path("files/delete")
+    public Response deleteFile(@QueryParam("fileid") String id) {
+        ObjectId objectId = new ObjectId(id);
+        dataService.deleteFile(objectId);
+        return Response.noContent().build();
+    }
 
 }

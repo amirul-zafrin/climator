@@ -16,7 +16,9 @@ public class ActivationEntity extends PanacheEntity {
     @JoinColumn(name = "id")
     public UserEntity userEntity;
 
+    @Column(unique = true)
     public String token;
+
     public LocalDateTime createdAt;
     public LocalDateTime expiredAt;
 
