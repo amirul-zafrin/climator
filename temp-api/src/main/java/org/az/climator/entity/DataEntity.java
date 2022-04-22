@@ -2,14 +2,11 @@ package org.az.climator.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import org.bson.types.ObjectId;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-//    TODO: Store uploaded data
 
 @Entity
 public class DataEntity extends PanacheEntity {
@@ -44,7 +41,7 @@ public class DataEntity extends PanacheEntity {
         return list("ue_id", id);
     }
 
-    public static DataEntity searchByObjectId(ObjectId objectId) {
-        return find("objectid",objectId).firstResult();
+    public static void deleteByObjectId(String objectId) {
+        delete("objectid", objectId);
     }
 }

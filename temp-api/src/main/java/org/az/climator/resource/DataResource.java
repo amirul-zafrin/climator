@@ -71,11 +71,11 @@ public class DataResource {
     }
 
     @DELETE
-    @RolesAllowed("user")
     @Path("files/delete")
+    @Transactional
+    @RolesAllowed("user")
     public Response deleteFile(@QueryParam("fileid") String id) {
-        ObjectId objectId = new ObjectId(id);
-        dataService.deleteFile(objectId);
+        dataService.deleteFile(id);
         return Response.noContent().build();
     }
 

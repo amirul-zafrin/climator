@@ -40,7 +40,6 @@ public class DataService{
             try {
                 MultivaluedMap<String, String> header = inputPart.getHeaders();
                 fileName = getFilename(header);
-                System.out.println("Filename:" + fileName);
                 InputStream inputStream = inputPart.getBody(InputStream.class, null);
                 objectId = DataService.saveCSVToDB(fileName, inputStream);
                 result.put(objectId, fileName);
@@ -68,13 +67,16 @@ public class DataService{
         }
         return null;
     }
-    
-    public void deleteFile(ObjectId objectId) {
+
+    public void deleteFile(String id) {
         MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
         MongoDatabase mydb = mongoClient.getDatabase("DataEntity");
         GridFSBucket gridFSBucket = GridFSBuckets.create(mydb, "files");
 
         try {
+            DataEntity.deleteByObjectId(id);
+
+            ObjectId objectId = new ObjectId(id);
             gridFSBucket.delete(objectId);
         } catch (Exception e) {
             e.printStackTrace();
