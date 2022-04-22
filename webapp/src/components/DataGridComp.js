@@ -1,9 +1,10 @@
 import React, { useMemo, useRef, useCallback, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
-
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { Button } from "./styles/Button";
+import { Tooltip } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 // TODO: Config in new file
 
@@ -89,19 +90,54 @@ const saveCSVParam = () => {
 const DataGridComp = ({ data }) => {
   const gridRef = useRef();
   const gridStyle = useMemo(() => ({ height: 500, width: "65% " }), []);
+  const [filteredData, setFilteredData] = useState();
+
   const clearFilters = useCallback(() => {
     gridRef.current.api.setFilterModel(null);
   }, []);
+
   const onBtnExport = useCallback(() => {
     const params = saveCSVParam();
     gridRef.current.api.exportDataAsCsv(params);
   }, []);
+
+  let navigate = useNavigate();
+
+  const toGraph = (e) => {
+    e.preventDefault();
+    navigate("/graph");
+  };
+
+  const onBtnUpdate = useCallback(() => {
+    const value = gridRef.current.api.getDataAsCsv(saveCSVParam());
+    setFilteredData(value);
+  }, []);
+
   return (
     <div className="ag-theme-alpine" style={gridStyle}>
       <Button onClick={clearFilters}>Reset Filter</Button>
-      <Button onClick={onBtnExport} disabled={data.length > 0 ? false : true}>
-        Export CSV
-      </Button>
+      <Tooltip
+        wrapLines
+        width={220}
+        withArrow
+        transition="fade"
+        transitionDuration={200}
+        label="Make sure you select all rows that you want to download"
+      >
+        <Button onClick={onBtnExport} disabled={data.length > 0 ? false : true}>
+          Export CSV
+        </Button>
+      </Tooltip>
+      <Tooltip
+        wrapLines
+        width={220}
+        withArrow
+        transition="fade"
+        transitionDuration={200}
+        label="Make sure you select all rows that you want to visualize"
+      >
+        <Button onClick={(e) => toGraph(e)}>To Graph</Button>
+      </Tooltip>
       <AgGridReact
         ref={gridRef}
         rowData={rows(data)}

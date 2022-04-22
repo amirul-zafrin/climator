@@ -3,10 +3,14 @@ import React, { useState, useEffect } from "react";
 import { TopContainer } from "./styles/TopBar.styled";
 import { Burger, Drawer } from "@mantine/core";
 import FileList from "./FileList";
+import DropZone from "./DropZone";
+import { Modal } from "@mantine/core";
+import { Button } from "./styles/Button";
 
 const TopBar = ({ setData }) => {
   const [user, setUser] = useState([]);
   const [opened, setOpened] = useState(false);
+  const [openUpload, setOpenUpload] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -41,6 +45,15 @@ const TopBar = ({ setData }) => {
         padding="xl"
         size="md"
       >
+        <Button onClick={() => setOpenUpload(true)}>Upload File</Button>
+        <Modal
+          centered
+          title="Login"
+          onClose={() => setOpenUpload(false)}
+          opened={openUpload}
+        >
+          <DropZone user={user} />
+        </Modal>
         <FileList setData={setData} />
       </Drawer>
     </>

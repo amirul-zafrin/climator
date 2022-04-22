@@ -40,17 +40,16 @@ const SignUp = () => {
     axios
       .post(`http://localhost:8081/register/create`, values)
       .then((response) => {
+        handlers.open();
         axios
           .get(`http://localhost:8081/mail/activation/` + response.data)
           .then(() => {
-            handlers.open();
-            console.log(sent);
             setError(null);
           })
           .catch((error) => console.log(error.response.data));
       })
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
       })
       .catch(function (error) {
         setError(error.response.data);

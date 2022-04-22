@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, TextInput, PasswordInput, Text } from "@mantine/core";
 import { ButtonContainer, LgButton } from "./styles/Login.styled";
 import { useForm } from "@mantine/form";
 import axios from "axios";
+import ErrorHandling from "./ErrorHandling";
 
 const Login = () => {
   let navigate = useNavigate();
@@ -15,6 +16,10 @@ const Login = () => {
     },
   });
 
+  const [value, setValue] = useState(false);
+
+  const [error, setError] = React.useState(null);
+
   const handleSubmit = form.onSubmit((values) => {
     axios
       .post(`http://localhost:8081/login`, values)
@@ -24,9 +29,16 @@ const Login = () => {
         navigate("/dashboard/" + response.data.username);
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        setError(error.response.data);
       });
   });
+
+  const resetPassRoute = (value) => {
+    return value ? navigate("/resetPassword") : null;
+  };
+  useEffect(() => {
+    resetPassRoute(value);
+  }, [value]);
 
   return (
     <Container>
@@ -47,12 +59,13 @@ const Login = () => {
           <LgButton>Log In</LgButton>
         </ButtonContainer>
       </form>
+      {error !== null ? <ErrorHandling text={error} /> : null}
       <Text
         variant="link"
         component="a"
-        href="https://mantine.dev"
         align="center"
         size="sm"
+        onClick={() => setValue(true)}
       >
         Forgot Password?
       </Text>
