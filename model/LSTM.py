@@ -1,7 +1,6 @@
 import math
 import torch.optim as optim
 from torch import nn
-from torch.utils.data import Dataset, DataLoader
 import torch
 import numpy as np
 import pandas as pd
@@ -38,78 +37,62 @@ class LSTM(nn.Module):
         outputs = torch.cat(outputs, dim=1)
         return outputs
 
-class TempDataset(Dataset):
-    def __init__(self, data, seq_prop=0.2):
-        self.data = data
-        self.data = torch.from_numpy(data)
-        self.seq_prop = seq_prop
-    
-    def __len__(self):
-        return len(self.data)*(1-self.seq_prop)
-
-    def __getitem__(self, index):
-        return self.data[index : index + int(len(self.data)*self.seq_prop)] , self.data[index : index + int(len(self.data)*self.seq_prop)]
-
 #Load data
-filename = "temperature_filtered.csv"
-data = pd.read_csv(filename, index_col=None, header=None)
-data = data[[2,6]]
-train_data = data[:int(len(data)*0.8)].to_numpy()
-test_data = data[int(len(data)*0.8):].to_numpy()
+data = pd.read_csv('temperature_filtered.csv', header=None)
 
-train_ds = TempDataset(train_data)
-test_ds = TempDataset(test_data)
+data = data[6]
+train_data = data[:int(len(data)*0.8)]
+test_data = data[int(len(data)*0.8):]
 
-batch_size = 64
-train_dataloader = DataLoader(train_ds, batch_size=batch_size,drop_last=True)
-test_dataloader = DataLoader(test_ds, batch_size=batch_size,drop_last=True)
+def df_to_XY(df, window_size = 5):
+    df_as_np = df.to_numpy()
+    x = []
+    y = []
 
-print(train_dataloader.shape)
+    for i in range(len(df_as_np) - window_size):
+        row = [[a] for a in df_as_np[i:i+window_size]]
+        x.append(row)
+        label = df_as_np[i+window_size]
+        y.append(label)
 
+    return np.array(x), np.array(y)
+
+
+X, y = df_to_XY(data)
+
+split_ratio = round(len(X)*0.8)
+
+X_train, y_train = X[:split_ratio], y[:split_ratio]
+X_test, y_test = X[split_ratio:], y[split_ratio:]
+
+train_input = torch.from_numpy(X_train)
+train_target = torch.from_numpy(y_train)
+test_input = torch.from_numpy(X_test)
+test_target = torch.from_numpy(y_test)
 #Initialize network
-model = LSTM()
+model = LSTM(input_size=5)
 
 # Optimizer
 criterion = nn.MSELoss()
-# optimizer = optim.Adam(model.parameters(), lr=0.001)
-optimizer = optim.LBFGS(model.parameters(), lr=0.001)
+optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-#Train network
-def train(loader):
-    for batch, (x,y) in enumerate(loader):
-        x = x.to(device)
-        y = y.to(device)
+# Train network
+for epoch in range(10):
+    # forward
+    scores = model(train_input)
+    loss = criterion(scores, train_target)
 
-        scores = model(x.reshape(100, batch_size, 1))
-        loss = criterion(scores.reshape(batch_size), y)
-        
-        #backward
-        optimizer.zero_grad()
-        loss.backward()
+    #backward
+    optimizer.zero_grad()
+    loss.backward()
 
-        #update
-        optimizer.step()
+    #update
+    optimizer.step()
 
-        if batch == len(train_dataloader):
-            loss = loss.item()
-            print(f"Train loss: {loss}")
+    with torch.no_grad():
+        scores = model(test_input)
+        loss = criterion(scores, test_target)
+        print("test loss:", loss.item())
 
-def test(loader):
-    model.eval()
-    for batch, (x,y) in enumerate(loader):
-        x = x.to(device)
-        y = y.to(device)
+        y = scores.detach().numpy()
 
-        scores = model(x.reshape(100, batch_size, 1))
-        loss = criterion(scores.reshape(batch_size), y)
-
-        if batch == len(train_dataloader):
-            loss = loss.item()
-            print(f"Train loss: {loss}")
-
-num_epoch = 100
-for epoch in range(num_epoch):
-    print(f"Epoch {epoch} / {num_epoch}")
-    train(train_dataloader)
-    test(test_dataloader)
-    

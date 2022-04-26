@@ -406,17 +406,40 @@ def get_variable(x):
     return x.cuda() if torch.cuda.is_available() else x
 
 #Load data
-filename = "temperature_filtered.csv"
-data = pd.read_csv(filename, index_col=None, header=None)
-data = data[[2,6]]
-train_data = data[:int(len(data)*0.8)].to_numpy()
-test_data = data[int(len(data)*0.8):].to_numpy()
+data = pd.read_csv('temperature_filtered.csv', header=None)
 
-train_tensor = torch.from_numpy(train_data)
-test_tensor = torch.from_numpy(test_data)
+data = data[6]
+train_data = data[:int(len(data)*0.8)]
+test_data = data[int(len(data)*0.8):]
+
+def df_to_XY(df, window_size = 5):
+    df_as_np = df.to_numpy()
+    x = []
+    y = []
+
+    for i in range(len(df_as_np) - window_size):
+        row = [[a] for a in df_as_np[i:i+window_size]]
+        x.append(row)
+        label = df_as_np[i+window_size]
+        y.append(label)
+
+    return np.array(x), np.array(y)
+
+
+X, y = df_to_XY(data)
+
+split_ratio = round(len(X)*0.8)
+
+X_train, y_train = X[:split_ratio], y[:split_ratio]
+X_test, y_test = X[split_ratio:], y[split_ratio:]
+
+train_input = torch.from_numpy(X_train).float()
+train_target = torch.from_numpy(y_train).float()
+test_input = torch.from_numpy(X_test).float()
+test_target = torch.from_numpy(y_test).float()
 
 #Initialize network
-model = SCINet(output_len = 96, input_len= 96, input_dim = 9, hid_size = 1, num_stacks = 1,
+model = SCINet(output_len = 96, input_len= 96, input_dim = 1, hid_size = 1, num_stacks = 1,
                 num_levels = 3, concat_len = 0, groups =1, kernel = 3, dropout = 0.5,
                  single_step_output_One = 0, positionalE =  False, modified = True).cuda()
 
@@ -426,44 +449,24 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Train network
 for epoch in range(10):
-    for data, target in train_tensor:
-        data = data.cuda()
-        target = target.cuda()
+    # forward
+    train_input = train_input.cuda()
+    train_target = train_target.cuda()
+    scores = model(train_input)
+    loss = criterion(scores, train_target)
 
-        # forward
-        scores = model(data)
-        loss = criterion(scores, target)
+    #backward
+    optimizer.zero_grad()
+    loss.backward()
 
-        #backward
-        optimizer.zero_grad()
-        loss.backward()
-
-        #update
-        optimizer.step()
-    
-def check_accuracy(loader, model):
-    if loader == train_tensor:
-        print('Checking accuracy on training set')
-    else:
-        print('Checking accuracy on test set')
-
-    num_correct = 0
-    num_sample = 0
-    model.eval() 
+    #update
+    optimizer.step()
 
     with torch.no_grad():
-        for x,y in loader:
-            x = torch.from_numpy(x)
-            y = torch.from_numpy(y)
+        test_input = test_input.cuda()
+        test_target = test_target.cuda()
+        scores = model(test_input)
+        loss = criterion(scores, test_target)
+        print("test loss:", loss.item())
 
-            scores = model(x)
-            _, pred = scores.max(1)
-            num_correct += (pred == y).sum()
-            num_sample += pred.size(0)
-        
-        print(f"Got {num_correct}/{num_sample} with accuracy {float(num_correct)/float(num_sample)*100:.2f}")
-
-    model.train()
-
-check_accuracy(train_data, model)
-check_accuracy(test_data, model)
+        y = scores.detach().numpy()
