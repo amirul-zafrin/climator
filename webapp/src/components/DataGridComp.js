@@ -90,7 +90,7 @@ const saveCSVParam = () => {
 const DataGridComp = ({ data }) => {
   const gridRef = useRef();
   const gridStyle = useMemo(() => ({ height: 500, width: "65% " }), []);
-  const [filteredData, setFilteredData] = useState();
+  const [filteredData, setFilteredData] = useState([]);
 
   const clearFilters = useCallback(() => {
     gridRef.current.api.setFilterModel(null);
@@ -105,11 +105,12 @@ const DataGridComp = ({ data }) => {
 
   const toGraph = (e) => {
     e.preventDefault();
-    navigate("/graph");
+    navigate("/graph", { state: { data: filteredData } });
   };
 
   const onBtnUpdate = useCallback(() => {
-    const value = gridRef.current.api.getDataAsCsv(saveCSVParam());
+    const params = saveCSVParam();
+    const value = gridRef.current.api.getDataAsCsv(params);
     setFilteredData(value);
   }, []);
 
@@ -136,8 +137,9 @@ const DataGridComp = ({ data }) => {
         transitionDuration={200}
         label="Make sure you select all rows that you want to visualize"
       >
-        <Button onClick={(e) => toGraph(e)}>To Graph</Button>
+        <Button onClick={toGraph}>To Graph</Button>
       </Tooltip>
+      <Button onClick={onBtnUpdate}>Save filtered</Button>
       <AgGridReact
         ref={gridRef}
         rowData={rows(data)}

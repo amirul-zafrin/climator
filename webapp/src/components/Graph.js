@@ -1,21 +1,18 @@
-import React from "react";
-import { LineChart, Line } from "recharts";
+import React, { useState, useEffect } from "react";
+import {
+  XYPlot,
+  LineSeries,
+  XAxis,
+  YAxis,
+  HorizontalGridLines,
+  VerticalGridLines,
+} from "react-vis";
 
-const rows = (data) => {
-  return data.map((i) => {
-    return {
-      id: i[0],
-      dateTime: i[2],
-      temperature: i[3],
-    };
-  });
-};
 const Graph = ({ data }) => {
-  return (
-    <LineChart width={400} height={400} data={rows(data)}>
-      <Line type="monotone" dataKey="temperature" stroke="#8884d8" />
-    </LineChart>
-  );
+  useEffect(() => {
+    console.log(data);
+  }, []);
+  return <></>;
 };
 
 export default Graph;

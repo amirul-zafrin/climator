@@ -36,6 +36,7 @@ const Login = () => {
   const resetPassRoute = (value) => {
     return value ? navigate("/resetPassword") : null;
   };
+
   useEffect(() => {
     resetPassRoute(value);
   }, [value]);

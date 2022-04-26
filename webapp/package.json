@@ -24,6 +24,7 @@
     "react-dropzone-uploader": "^2.11.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
+    "react-vis": "^1.11.7",
     "recharts": "^2.1.9",
     "styled-components": "^5.3.5",
     "tabler-icons-react": "^1.45.0",

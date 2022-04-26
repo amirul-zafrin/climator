@@ -3,10 +3,11 @@ import { Modal, Accordion } from "@mantine/core";
 import { ButtonContainer } from "./styles/FlexContainer.styled";
 import { Button } from "./styles/Button";
 import FileList from "./FileList";
-import UploadData from "../components/UploadData";
+import DropZone from "./DropZone";
 
 const DrawerComp = ({ setData }) => {
   const [openedUpload, setOpenedUpload] = useState(false);
+  const [user, setUser] = useState([]);
   return (
     <>
       <ButtonContainer>
@@ -18,7 +19,7 @@ const DrawerComp = ({ setData }) => {
         onClose={() => setOpenedUpload(false)}
         opened={openedUpload}
       >
-        <UploadData />
+        <DropZone user={user} />
       </Modal>
       <Accordion>
         <Accordion.Item label="Uploaded Data">
