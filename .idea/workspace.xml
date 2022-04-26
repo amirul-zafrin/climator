@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b0ead6ac-bf41-4493-aa9f-83946495b013" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/src/components/UploadData.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/components/UploadData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/src/components/styles/Button.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/components/styles/Button.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/src/components/styles/Landing.styled.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/components/styles/Landing.styled.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/src/components/styles/Login.styled.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/components/styles/Login.styled.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/src/components/styles/TopBar.styled.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/components/styles/TopBar.styled.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/LSTM.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/LSTM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/DataGridComp.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/src/components/DataGridComp.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
