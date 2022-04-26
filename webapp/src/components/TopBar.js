@@ -39,7 +39,7 @@ const TopBar = ({ setData }) => {
         onClose={() => setOpened(false)}
         title="File List"
         padding="xl"
-        size="md"
+        size="xl"
       >
         <DrawerComp setData={setData} />
       </Drawer>

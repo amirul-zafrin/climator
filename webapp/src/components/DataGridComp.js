@@ -38,12 +38,12 @@ const dateFilter = {
   maxValidYear: 2030,
 };
 
-const timeFilter = {
-  allowedCharPattern: "\\d\\-\\,",
-  numberParser: (text) => {
-    return text == null ? null : parseFloat(text.replace(":", ""));
-  },
-};
+// const timeFilter = {
+//   allowedCharPattern: "\\d\\-\\,",
+//   numberParser: (text) => {
+//     return text == null ? null : parseFloat(text.replace(":", ""));
+//   },
+// };
 
 const columns = [
   { field: "id", checkboxSelection: true, headerCheckboxSelection: true },
@@ -55,7 +55,7 @@ const columns = [
   {
     field: "time",
     filter: "agNumberColumnFilter",
-    filterParams: { ...timeFilter, buttons: ["reset", "apply"] },
+    filterParams: { buttons: ["reset", "apply"] },
   },
   {
     field: "temperature",
@@ -90,7 +90,6 @@ const saveCSVParam = () => {
 const DataGridComp = ({ data }) => {
   const gridRef = useRef();
   const gridStyle = useMemo(() => ({ height: 500, width: "65% " }), []);
-  const [filteredData, setFilteredData] = useState([]);
 
   const clearFilters = useCallback(() => {
     gridRef.current.api.setFilterModel(null);
@@ -105,14 +104,11 @@ const DataGridComp = ({ data }) => {
 
   const toGraph = (e) => {
     e.preventDefault();
-    navigate("/graph", { state: { data: filteredData } });
-  };
-
-  const onBtnUpdate = useCallback(() => {
     const params = saveCSVParam();
-    const value = gridRef.current.api.getDataAsCsv(params);
-    setFilteredData(value);
-  }, []);
+    navigate("/graph", {
+      state: { data: gridRef.current.api.getDataAsCsv(params) },
+    });
+  };
 
   return (
     <div className="ag-theme-alpine" style={gridStyle}>
@@ -139,7 +135,6 @@ const DataGridComp = ({ data }) => {
       >
         <Button onClick={toGraph}>To Graph</Button>
       </Tooltip>
-      <Button onClick={onBtnUpdate}>Save filtered</Button>
       <AgGridReact
         ref={gridRef}
         rowData={rows(data)}

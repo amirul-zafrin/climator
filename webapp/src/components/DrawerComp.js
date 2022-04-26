@@ -4,12 +4,13 @@ import { ButtonContainer } from "./styles/FlexContainer.styled";
 import { Button } from "./styles/Button";
 import FileList from "./FileList";
 import DropZone from "./DropZone";
+import { DrawerContainer } from "./styles/DataGrid.styled";
 
 const DrawerComp = ({ setData }) => {
   const [openedUpload, setOpenedUpload] = useState(false);
   const [user, setUser] = useState([]);
   return (
-    <>
+    <DrawerContainer>
       <ButtonContainer>
         <Button onClick={() => setOpenedUpload(true)}>Upload File</Button>
       </ButtonContainer>
@@ -26,7 +27,7 @@ const DrawerComp = ({ setData }) => {
           <FileList setData={setData} />
         </Accordion.Item>
       </Accordion>
-    </>
+    </DrawerContainer>
   );
 };
 

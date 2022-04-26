@@ -48,7 +48,7 @@ const FileList = ({ setData }) => {
   };
 
   return (
-    <div>
+    <>
       <LoadingOverlay visible={visible} />
       <ol>
         {files.length > 0 ? (
@@ -63,7 +63,7 @@ const FileList = ({ setData }) => {
           <p>No previous data</p>
         )}
       </ol>
-    </div>
+    </>
   );
 };
 
