@@ -1,4 +1,5 @@
 import math
+from bs4 import SoupStrainer
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.autograd import Variable
@@ -439,7 +440,7 @@ test_input = torch.from_numpy(X_test).float()
 test_target = torch.from_numpy(y_test).float()
 
 #Initialize network
-model = SCINet(output_len = 96, input_len= 96, input_dim = 1, hid_size = 1, num_stacks = 1,
+model = SCINet(output_len = 96, input_len= 96, input_dim = 5, hid_size = 1, num_stacks = 1,
                 num_levels = 3, concat_len = 0, groups =1, kernel = 3, dropout = 0.5,
                  single_step_output_One = 0, positionalE =  False, modified = True).cuda()
 
