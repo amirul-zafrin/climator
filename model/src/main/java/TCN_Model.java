@@ -9,7 +9,7 @@ import java.io.IOException;
 public class TCN_Model {
 
     public static void main(String[] args) throws IOException, UnsupportedKerasConfigurationException, InvalidKerasConfigurationException {
-        String fullModel = new ClassPathResource("TCN_Model_V2").getFile().getPath();
+        String fullModel = new ClassPathResource("LSTM_tf.h5").getFile().getPath();
         MultiLayerNetwork model = KerasModelImport.importKerasSequentialModelAndWeights(fullModel);
 
 
