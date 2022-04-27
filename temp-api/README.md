@@ -2,20 +2,27 @@
 
 <br />
 <div align="center">
-  <a href="https://img.freepik.com/free-vector/two-thermometers-hot-cold-weather_1308-36010.jpg?t=st=1649314846~exp=1649315446~hmac=f41c26947b7a3fc87f83ff2687c4373bfefc9347d100711b4c8ab7128573bdbc&w=740">
-    <img src="https://img.freepik.com/free-vector/two-thermometers-hot-cold-weather_1308-36010.jpg?t=st=1649314846~exp=1649315446~hmac=f41c26947b7a3fc87f83ff2687c4373bfefc9347d100711b4c8ab7128573bdbc&w=740" alt="Logo" width="80" height="80">
+  <a href="https://github.com/amirul-zafrin/climator">
+    <img src="https://github.com/amirul-zafrin/climator/blob/main/public/logo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Climator</h3>
 
   <p align="center">
-    Temperature Dashboard and Prediction
+    Web application to analyse and predict temperature for business. 
+    <br />
+    <a href="https://github.com/amirul-zafrin/climator"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/amirul-zafrin/climator">View Demo</a>
+    ·
+    <a href="https://github.com/amirul-zafrin/climator/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/amirul-zafrin/climator/issues">Request Feature</a>
   </p>
 </div>
 
-<br />
-
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project uses Quarkus (the Supersonic Subatomic Java Framework), Postgresql and MongoDB.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
@@ -25,11 +32,13 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 
 You can run your application in dev mode that enables live coding using:
 
+> **_NOTE:_** By default, Quarkus run at http://localhost:8080. For this project, I use http://localhost:8081.
+
 ```shell script
 ./mvnw compile quarkus:dev
 ```
 
-> **_NOTE:_** Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+> **_NOTE:_** Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8081/q/dev/.
 
 ### Packaging and running the application
 
@@ -51,3 +60,15 @@ If you want to build an _über-jar_, execute the following command:
 ```
 
 The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+
+## Databases
+
+### Postgresql
+
+Postgres database store user information including the file objectID that can be use to retrieve data from mongoDB.
+
+![Postgresql](https://github.com/amirul-zafrin/climator/blob/main/public/postgres_er.png)
+
+### MongoDB
+
+MongoDB limits only 16MB of data, therefore, I use mongoDB [GridFS](https://www.mongodb.com/docs/manual/core/gridfs/#:~:text=GridFS%20is%20a%20specification%20for,chunk%20as%20a%20separate%20document) to chunk the files.
