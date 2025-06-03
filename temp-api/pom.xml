@@ -114,6 +114,12 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-mongodb-panache</artifactId>
     </dependency>
+    <!-- VULNERABLE: Known vulnerable library -->
+    <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.1</version> <!-- Has deserialization RCE -->
+    </dependency>
 <!--    <dependency>-->
 <!--      <groupId>org.apache.camel.quarkus</groupId>-->
 <!--      <artifactId>camel-quarkus-mongodb-gridfs</artifactId>-->
